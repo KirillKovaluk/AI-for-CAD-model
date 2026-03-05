@@ -1,0 +1,88 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Study\\3Kurs2Part\\POMR_Yac\\C#CadAI\\CadGenerator\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{3FF8B292-3508-4579-958C-A1BA32E90543}|CadGenerator\\CadGenerator.csproj|c:\\study\\3kurs2part\\pomr_yac\\c#cadai\\cadgenerator\\cadgenerator\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3FF8B292-3508-4579-958C-A1BA32E90543}|CadGenerator\\CadGenerator.csproj|solutionrelative:cadgenerator\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3FF8B292-3508-4579-958C-A1BA32E90543}|CadGenerator\\CadGenerator.csproj|c:\\study\\3kurs2part\\pomr_yac\\c#cadai\\cadgenerator\\cadgenerator\\stlexporter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3FF8B292-3508-4579-958C-A1BA32E90543}|CadGenerator\\CadGenerator.csproj|solutionrelative:cadgenerator\\stlexporter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3FF8B292-3508-4579-958C-A1BA32E90543}|CadGenerator\\CadGenerator.csproj|c:\\study\\3kurs2part\\pomr_yac\\c#cadai\\cadgenerator\\cadgenerator\\modelgenerator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3FF8B292-3508-4579-958C-A1BA32E90543}|CadGenerator\\CadGenerator.csproj|solutionrelative:cadgenerator\\modelgenerator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3FF8B292-3508-4579-958C-A1BA32E90543}|CadGenerator\\CadGenerator.csproj|c:\\study\\3kurs2part\\pomr_yac\\c#cadai\\cadgenerator\\cadgenerator\\textparser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3FF8B292-3508-4579-958C-A1BA32E90543}|CadGenerator\\CadGenerator.csproj|solutionrelative:cadgenerator\\textparser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Study\\3Kurs2Part\\POMR_Yac\\C#CadAI\\CadGenerator\\CadGenerator\\Program.cs",
+              "RelativeDocumentMoniker": "CadGenerator\\Program.cs",
+              "ToolTip": "C:\\Study\\3Kurs2Part\\POMR_Yac\\C#CadAI\\CadGenerator\\CadGenerator\\Program.cs",
+              "RelativeToolTip": "CadGenerator\\Program.cs",
+              "ViewState": "AgIAACAAAAAAAAAAAAAuwGsAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-05T17:20:28.333Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "StlExporter.cs",
+              "DocumentMoniker": "C:\\Study\\3Kurs2Part\\POMR_Yac\\C#CadAI\\CadGenerator\\CadGenerator\\StlExporter.cs",
+              "RelativeDocumentMoniker": "CadGenerator\\StlExporter.cs",
+              "ToolTip": "C:\\Study\\3Kurs2Part\\POMR_Yac\\C#CadAI\\CadGenerator\\CadGenerator\\StlExporter.cs",
+              "RelativeToolTip": "CadGenerator\\StlExporter.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAmwC4AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-05T17:20:18.996Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ModelGenerator.cs",
+              "DocumentMoniker": "C:\\Study\\3Kurs2Part\\POMR_Yac\\C#CadAI\\CadGenerator\\CadGenerator\\ModelGenerator.cs",
+              "RelativeDocumentMoniker": "CadGenerator\\ModelGenerator.cs",
+              "ToolTip": "C:\\Study\\3Kurs2Part\\POMR_Yac\\C#CadAI\\CadGenerator\\CadGenerator\\ModelGenerator.cs",
+              "RelativeToolTip": "CadGenerator\\ModelGenerator.cs",
+              "ViewState": "AgIAADcAAAAAAAAAAAAmwFkAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-05T17:20:06.958Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "TextParser.cs",
+              "DocumentMoniker": "C:\\Study\\3Kurs2Part\\POMR_Yac\\C#CadAI\\CadGenerator\\CadGenerator\\TextParser.cs",
+              "RelativeDocumentMoniker": "CadGenerator\\TextParser.cs",
+              "ToolTip": "C:\\Study\\3Kurs2Part\\POMR_Yac\\C#CadAI\\CadGenerator\\CadGenerator\\TextParser.cs",
+              "RelativeToolTip": "CadGenerator\\TextParser.cs",
+              "ViewState": "AgIAACcAAAAAAAAAAAAcwEYAAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-05T17:19:55.711Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

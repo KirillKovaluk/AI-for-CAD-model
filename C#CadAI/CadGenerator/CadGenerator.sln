@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35919.96 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CadGenerator", "CadGenerator\CadGenerator.csproj", "{3FF8B292-3508-4579-958C-A1BA32E90543}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3FF8B292-3508-4579-958C-A1BA32E90543}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FF8B292-3508-4579-958C-A1BA32E90543}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FF8B292-3508-4579-958C-A1BA32E90543}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FF8B292-3508-4579-958C-A1BA32E90543}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9A344A7B-937B-488D-89D4-4C611E9BAB54}
+	EndGlobalSection
+EndGlobal

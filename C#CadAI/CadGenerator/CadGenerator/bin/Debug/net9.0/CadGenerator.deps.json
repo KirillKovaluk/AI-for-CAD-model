@@ -1,0 +1,57 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v9.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v9.0": {
+      "CadGenerator/1.0.0": {
+        "dependencies": {
+          "STLDotNet6.Formats.StereoLithography": "1.0.0",
+          "geometry3Sharp": "1.0.324"
+        },
+        "runtime": {
+          "CadGenerator.dll": {}
+        }
+      },
+      "geometry3Sharp/1.0.324": {
+        "runtime": {
+          "lib/netstandard2.0/geometry3Sharp.dll": {
+            "assemblyVersion": "1.0.324.0",
+            "fileVersion": "1.0.324.0"
+          }
+        }
+      },
+      "STLDotNet6.Formats.StereoLithography/1.0.0": {
+        "runtime": {
+          "lib/net6.0/STLDotNet6.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "CadGenerator/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "geometry3Sharp/1.0.324": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-vdEC1zaX6lV8LI9BvqizplraEJ6zFE98rMM+hDZqVPXMtwDIIY/RpTQQtxe043E9gsSdx0Xyz1TbSqIYQnBPaw==",
+      "path": "geometry3sharp/1.0.324",
+      "hashPath": "geometry3sharp.1.0.324.nupkg.sha512"
+    },
+    "STLDotNet6.Formats.StereoLithography/1.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-a40qrHW0IDHh9VIKGv/WB76rnMpd6R9PtQtv6GrMrDTFsamKGOLw8bETGV12V5dTpGtPLn7c64X2StOALvLYWw==",
+      "path": "stldotnet6.formats.stereolithography/1.0.0",
+      "hashPath": "stldotnet6.formats.stereolithography.1.0.0.nupkg.sha512"
+    }
+  }
+}
