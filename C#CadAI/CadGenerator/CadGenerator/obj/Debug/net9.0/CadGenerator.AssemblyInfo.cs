@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CadGenerator")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9f2af484141db6f534c5af30c20ed1f87467ff67")]
 [assembly: System.Reflection.AssemblyProductAttribute("CadGenerator")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CadGenerator")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
