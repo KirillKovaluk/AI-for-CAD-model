@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace CadGenerator
 {
@@ -18,7 +17,6 @@ namespace CadGenerator
             var parameters = new ShapeParameters();
             description = description.ToLower();
 
-            // Определяем тип фигуры
             if (description.Contains("куб") || description.Contains("cube"))
             {
                 parameters.ShapeType = "cube";
@@ -36,7 +34,7 @@ namespace CadGenerator
             }
             else
             {
-                parameters.ShapeType = "cube"; // По умолчанию
+                parameters.ShapeType = "cube";
                 parameters.Size1 = 10;
                 parameters.Size2 = 10;
                 parameters.Size3 = 10;
@@ -47,7 +45,6 @@ namespace CadGenerator
 
         private void ExtractCubeDimensions(string text, ShapeParameters parameters)
         {
-            // Ищем размеры в формате: 10x10x10 или 10 10 10
             var match = Regex.Match(text, @"(\d+(?:\.\d+)?)\s*[xх]\s*(\d+(?:\.\d+)?)\s*[xх]\s*(\d+(?:\.\d+)?)");
             if (match.Success)
             {
@@ -57,7 +54,6 @@ namespace CadGenerator
             }
             else
             {
-                // Ищем одно число
                 match = Regex.Match(text, @"(\d+(?:\.\d+)?)");
                 if (match.Success)
                 {
@@ -80,7 +76,7 @@ namespace CadGenerator
             var match = Regex.Match(text, @"(\d+(?:\.\d+)?)");
             if (match.Success)
             {
-                parameters.Size1 = double.Parse(match.Groups[1].Value); // Радиус
+                parameters.Size1 = double.Parse(match.Groups[1].Value);
             }
             else
             {
@@ -93,13 +89,13 @@ namespace CadGenerator
             var matches = Regex.Matches(text, @"(\d+(?:\.\d+)?)");
             if (matches.Count >= 2)
             {
-                parameters.Size1 = double.Parse(matches[0].Value); // Радиус
-                parameters.Size2 = double.Parse(matches[1].Value); // Высота
+                parameters.Size1 = double.Parse(matches[0].Value);
+                parameters.Size2 = double.Parse(matches[1].Value);
             }
             else
             {
-                parameters.Size1 = 5; // Радиус
-                parameters.Size2 = 10; // Высота
+                parameters.Size1 = 5;
+                parameters.Size2 = 10;
             }
         }
     }
