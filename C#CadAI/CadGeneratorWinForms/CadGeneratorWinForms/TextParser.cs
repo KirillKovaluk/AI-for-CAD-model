@@ -1,53 +1,70 @@
-﻿using CadGenerator;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text.RegularExpressions;
 
 namespace CadGeneratorWinForms
 {
+    public class ShapeParameters
+    {
+        public string ShapeType { get; set; }
+        public double Size1 { get; set; }
+        public double Size2 { get; set; }
+        public double Size3 { get; set; }
+        public Color Color { get; set; } = Color.Gray;
+        public string ColorName { get; set; } = "серый";
+    }
+
     public class TextParser
     {
-        // Существующий метод (без цвета)
-        public ShapeParameters Parse(string description)
+        public ShapeParameters Parse(string description, Color selectedColor = default)
         {
             var parameters = new ShapeParameters();
+            string originalText = description;
             description = description.ToLower().Trim();
 
             Console.WriteLine($"🔍 Парсинг: {description}");
 
-            // Определяем тип фигуры
-            if (description.Contains("куб") || description.Contains("cube") || description.Contains("прямоугольник"))
+            // 1. Определяем тип фигуры (с расширенными ключевыми словами)
+            if (description.Contains("куб") || description.Contains("cube") ||
+                description.Contains("прямоугольник") || description.Contains("box"))
             {
                 parameters.ShapeType = "cube";
                 ExtractCubeDimensions(description, parameters);
-            }
-            else if (description.Contains("сфер") || description.Contains("sphere") ||
-                     description.Contains("шар") || description.Contains("ball"))
-            {
-                parameters.ShapeType = "sphere";
-                ExtractSphereDimensions(description, parameters);
+                Console.WriteLine($"   📌 Распознано: КУБ");
             }
             else if (description.Contains("цилиндр") || description.Contains("cylinder") ||
-                     description.Contains("труб") || description.Contains("pipe"))
+                     description.Contains("труб") || description.Contains("pipe") ||
+                     description.Contains("колонн") || description.Contains("столб"))
             {
                 parameters.ShapeType = "cylinder";
                 ExtractCylinderDimensions(description, parameters);
+                Console.WriteLine($"   📌 Распознано: ЦИЛИНДР");
+            }
+            else if (description.Contains("сфер") || description.Contains("sphere") ||
+                     description.Contains("шар") || description.Contains("ball") ||
+                     description.Contains("глобус"))
+            {
+                parameters.ShapeType = "sphere";
+                ExtractSphereDimensions(description, parameters);
+                Console.WriteLine($"   📌 Распознано: СФЕРА");
             }
             else
             {
+                // Автоопределение по количеству чисел
                 var numbers = ExtractAllNumbers(description);
                 if (numbers.Count == 1)
                 {
                     parameters.ShapeType = "sphere";
                     parameters.Size1 = numbers[0];
+                    Console.WriteLine($"   📌 Автоопределение: СФЕРА (1 число)");
                 }
-                else if (numbers.Count >= 3)
+                else if (numbers.Count == 2)
                 {
-                    parameters.ShapeType = "cube";
+                    parameters.ShapeType = "cylinder";
                     parameters.Size1 = numbers[0];
                     parameters.Size2 = numbers[1];
-                    parameters.Size3 = numbers[2];
+                    Console.WriteLine($"   📌 Автоопределение: ЦИЛИНДР (2 числа)");
                 }
                 else
                 {
@@ -55,29 +72,132 @@ namespace CadGeneratorWinForms
                     parameters.Size1 = 10;
                     parameters.Size2 = 10;
                     parameters.Size3 = 10;
+                    Console.WriteLine($"   📌 Автоопределение: КУБ (по умолчанию)");
                 }
             }
 
-            // Пробуем найти цвет в тексте
-            DetectColor(description, parameters);
-
-            return parameters;
-        }
-
-        // НОВЫЙ МЕТОД с поддержкой цвета из ComboBox
-        public ShapeParameters Parse(string description, Color selectedColor)
-        {
-            // Сначала парсим как обычно
-            var parameters = Parse(description);
-
-            // Если передан конкретный цвет, используем его (приоритет выше, чем цвет из текста)
-            if (selectedColor != Color.Empty)
+            // 2. Определяем цвет
+            if (selectedColor != Color.Empty && selectedColor != Color.Gray)
             {
                 parameters.Color = selectedColor;
                 parameters.ColorName = GetColorName(selectedColor);
             }
+            else
+            {
+                DetectColor(description, parameters);
+            }
+
+            Console.WriteLine($"   🎨 Цвет: {parameters.ColorName}");
+            Console.WriteLine($"   📐 Размеры: {parameters.Size1}, {parameters.Size2}, {parameters.Size3}");
 
             return parameters;
+        }
+
+        private void ExtractCubeDimensions(string text, ShapeParameters parameters)
+        {
+            var numbers = ExtractAllNumbers(text);
+
+            // Ищем формат XxYxZ
+            var match = Regex.Match(text, @"(\d+(?:\.\d+)?)\s*[xх]\s*(\d+(?:\.\d+)?)\s*[xх]\s*(\d+(?:\.\d+)?)");
+            if (match.Success)
+            {
+                parameters.Size1 = double.Parse(match.Groups[1].Value.Replace('.', ','));
+                parameters.Size2 = double.Parse(match.Groups[2].Value.Replace('.', ','));
+                parameters.Size3 = double.Parse(match.Groups[3].Value.Replace('.', ','));
+            }
+            else if (numbers.Count >= 3)
+            {
+                parameters.Size1 = numbers[0];
+                parameters.Size2 = numbers[1];
+                parameters.Size3 = numbers[2];
+            }
+            else if (numbers.Count == 2)
+            {
+                parameters.Size1 = numbers[0];
+                parameters.Size2 = numbers[1];
+                parameters.Size3 = numbers[0];
+            }
+            else if (numbers.Count == 1)
+            {
+                parameters.Size1 = numbers[0];
+                parameters.Size2 = numbers[0];
+                parameters.Size3 = numbers[0];
+            }
+            else
+            {
+                parameters.Size1 = 10;
+                parameters.Size2 = 10;
+                parameters.Size3 = 10;
+            }
+        }
+
+        private void ExtractSphereDimensions(string text, ShapeParameters parameters)
+        {
+            var numbers = ExtractAllNumbers(text);
+
+            if (numbers.Count > 0)
+            {
+                parameters.Size1 = numbers[0];
+
+                // Если указан диаметр, делим на 2
+                if (text.Contains("диаметр") || text.Contains("диаметром") ||
+                    text.Contains("diameter") || text.Contains("ø"))
+                {
+                    parameters.Size1 = numbers[0] / 2;
+                    Console.WriteLine($"   📏 Диаметр {numbers[0]} -> радиус {parameters.Size1}");
+                }
+            }
+            else
+            {
+                parameters.Size1 = 10;
+            }
+
+            parameters.Size2 = 0;
+            parameters.Size3 = 0;
+        }
+
+        private void ExtractCylinderDimensions(string text, ShapeParameters parameters)
+        {
+            var numbers = ExtractAllNumbers(text);
+
+            if (numbers.Count >= 2)
+            {
+                // Первое число - радиус, второе - высота
+                parameters.Size1 = numbers[0];
+                parameters.Size2 = numbers[1];
+
+                // Если указан диаметр, корректируем
+                if (text.Contains("диаметр") || text.Contains("диаметром") ||
+                    text.Contains("diameter") || text.Contains("ø"))
+                {
+                    parameters.Size1 = numbers[0] / 2;
+                    Console.WriteLine($"   📏 Диаметр {numbers[0]} -> радиус {parameters.Size1}");
+                }
+
+                // Если порядок перепутан (высота указана первой)
+                if ((text.Contains("высот") && numbers[0] > numbers[1]) ||
+                    (text.IndexOf("высот") < text.IndexOf("радиус") && numbers[0] > numbers[1]))
+                {
+                    double temp = parameters.Size1;
+                    parameters.Size1 = parameters.Size2;
+                    parameters.Size2 = temp;
+                    Console.WriteLine($"   🔄 Перестановка: радиус={parameters.Size1}, высота={parameters.Size2}");
+                }
+            }
+            else if (numbers.Count == 1)
+            {
+                // Если одно число - считаем что это радиус, высота = радиус * 2
+                parameters.Size1 = numbers[0];
+                parameters.Size2 = numbers[0] * 2;
+                Console.WriteLine($"   📏 Одно число: радиус={parameters.Size1}, высота={parameters.Size2}");
+            }
+            else
+            {
+                parameters.Size1 = 5;
+                parameters.Size2 = 10;
+            }
+
+            parameters.Size3 = 0;
         }
 
         private void DetectColor(string text, ShapeParameters parameters)
@@ -128,100 +248,6 @@ namespace CadGeneratorWinForms
             if (color == Color.Gold) return "золотой";
             if (color == Color.Silver) return "серебряный";
             return "неизвестный";
-        }
-
-        // ... остальные методы (ExtractCubeDimensions, ExtractSphereDimensions, 
-        // ExtractCylinderDimensions, ExtractAllNumbers) остаются без изменений ...
-
-        private void ExtractCubeDimensions(string text, ShapeParameters parameters)
-        {
-            var numbers = ExtractAllNumbers(text);
-
-            var match = Regex.Match(text, @"(\d+(?:\.\d+)?)\s*[xх]\s*(\d+(?:\.\d+)?)\s*[xх]\s*(\d+(?:\.\d+)?)");
-            if (match.Success)
-            {
-                parameters.Size1 = double.Parse(match.Groups[1].Value.Replace('.', ','));
-                parameters.Size2 = double.Parse(match.Groups[2].Value.Replace('.', ','));
-                parameters.Size3 = double.Parse(match.Groups[3].Value.Replace('.', ','));
-            }
-            else if (numbers.Count >= 3)
-            {
-                parameters.Size1 = numbers[0];
-                parameters.Size2 = numbers[1];
-                parameters.Size3 = numbers[2];
-            }
-            else if (numbers.Count == 2)
-            {
-                parameters.Size1 = numbers[0];
-                parameters.Size2 = numbers[1];
-                parameters.Size3 = numbers[0];
-            }
-            else if (numbers.Count == 1)
-            {
-                parameters.Size1 = numbers[0];
-                parameters.Size2 = numbers[0];
-                parameters.Size3 = numbers[0];
-            }
-            else
-            {
-                parameters.Size1 = 10;
-                parameters.Size2 = 10;
-                parameters.Size3 = 10;
-            }
-        }
-
-        private void ExtractSphereDimensions(string text, ShapeParameters parameters)
-        {
-            var numbers = ExtractAllNumbers(text);
-
-            if (numbers.Count > 0)
-            {
-                parameters.Size1 = numbers[0];
-
-                if (text.Contains("диаметр") || text.Contains("диаметром") ||
-                    text.Contains("diameter") || text.Contains("ø"))
-                {
-                    parameters.Size1 = numbers[0] / 2;
-                }
-            }
-            else
-            {
-                parameters.Size1 = 10;
-            }
-        }
-
-        private void ExtractCylinderDimensions(string text, ShapeParameters parameters)
-        {
-            var numbers = ExtractAllNumbers(text);
-
-            if (numbers.Count >= 2)
-            {
-                parameters.Size1 = numbers[0];
-                parameters.Size2 = numbers[1];
-
-                if (text.Contains("диаметр") || text.Contains("diameter") || text.Contains("ø"))
-                {
-                    parameters.Size1 = numbers[0] / 2;
-                }
-
-                if ((text.Contains("высот") && numbers[0] > numbers[1]) ||
-                    (text.IndexOf("высот") < text.IndexOf("радиус") && numbers[0] > numbers[1]))
-                {
-                    double temp = parameters.Size1;
-                    parameters.Size1 = parameters.Size2;
-                    parameters.Size2 = temp;
-                }
-            }
-            else if (numbers.Count == 1)
-            {
-                parameters.Size1 = numbers[0] / 2;
-                parameters.Size2 = numbers[0];
-            }
-            else
-            {
-                parameters.Size1 = 5;
-                parameters.Size2 = 10;
-            }
         }
 
         private List<double> ExtractAllNumbers(string text)
