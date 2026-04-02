@@ -24,6 +24,8 @@
             this.lblResult = new System.Windows.Forms.Label();
             this.groupBoxInput = new System.Windows.Forms.GroupBox();
             this.lblExamples = new System.Windows.Forms.Label();
+            this.lblColor = new System.Windows.Forms.Label();
+            this.cmbColor = new System.Windows.Forms.ComboBox();
             this.groupBoxModels = new System.Windows.Forms.GroupBox();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -50,7 +52,7 @@
             // groupBoxInput
             this.groupBoxInput.Text = "Введите описание модели";
             this.groupBoxInput.Location = new System.Drawing.Point(12, 12);
-            this.groupBoxInput.Size = new System.Drawing.Size(560, 120);
+            this.groupBoxInput.Size = new System.Drawing.Size(560, 145);
             this.groupBoxInput.TabIndex = 0;
 
             // txtQuery
@@ -67,13 +69,31 @@
 
             // lblExamples
             this.lblExamples.Location = new System.Drawing.Point(6, 55);
-            this.lblExamples.Size = new System.Drawing.Size(440, 60);
+            this.lblExamples.Size = new System.Drawing.Size(440, 30);
             this.lblExamples.Text = "Примеры: куб 15x20x25 | сфера радиусом 30 | цилиндр 5 20 | шар диаметром 40";
             this.lblExamples.ForeColor = System.Drawing.Color.Gray;
 
+            // lblColor
+            this.lblColor.Location = new System.Drawing.Point(6, 90);
+            this.lblColor.Size = new System.Drawing.Size(60, 25);
+            this.lblColor.Text = "Цвет:";
+            this.lblColor.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+
+            // cmbColor
+            this.cmbColor.Location = new System.Drawing.Point(70, 90);
+            this.cmbColor.Size = new System.Drawing.Size(150, 25);
+            this.cmbColor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbColor.Items.AddRange(new object[] {
+                "Красный", "Синий", "Зеленый", "Желтый", "Оранжевый",
+                "Фиолетовый", "Розовый", "Черный", "Белый", "Серый",
+                "Коричневый", "Золотой", "Серебряный"
+            });
+            this.cmbColor.SelectedIndex = 9;
+            this.cmbColor.TabIndex = 1;
+
             // groupBoxModels
             this.groupBoxModels.Text = "Сгенерированные модели";
-            this.groupBoxModels.Location = new System.Drawing.Point(12, 140);
+            this.groupBoxModels.Location = new System.Drawing.Point(12, 160);
             this.groupBoxModels.Size = new System.Drawing.Size(560, 380);
             this.groupBoxModels.TabIndex = 1;
 
@@ -151,6 +171,8 @@
             this.groupBoxInput.Controls.Add(this.txtQuery);
             this.groupBoxInput.Controls.Add(this.btnGenerate);
             this.groupBoxInput.Controls.Add(this.lblExamples);
+            this.groupBoxInput.Controls.Add(this.lblColor);
+            this.groupBoxInput.Controls.Add(this.cmbColor);
 
             // Добавляем контролы в groupBoxModels
             this.groupBoxModels.Controls.Add(this.listBoxModels);
@@ -187,6 +209,8 @@
         private System.Windows.Forms.Label lblResult;
         private System.Windows.Forms.GroupBox groupBoxInput;
         private System.Windows.Forms.Label lblExamples;
+        private System.Windows.Forms.Label lblColor;
+        private System.Windows.Forms.ComboBox cmbColor;
         private System.Windows.Forms.GroupBox groupBoxModels;
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;

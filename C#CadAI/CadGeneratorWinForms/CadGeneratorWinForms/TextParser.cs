@@ -1,90 +1,41 @@
-﻿using System;
+﻿using CadGenerator;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text.RegularExpressions;
 
-namespace CadGenerator
+namespace CadGeneratorWinForms
 {
     public class TextParser
     {
-        // Словарь цветов на русском и английском
-        private readonly Dictionary<string, Color> _colorMap = new Dictionary<string, Color>
-        {
-            // Русские названия
-            {"красн", Color.Red},
-            {"алый", Color.Red},
-            {"синий", Color.Blue},
-            {"голубой", Color.LightBlue},
-            {"зелен", Color.Green},
-            {"салатов", Color.LightGreen},
-            {"желт", Color.Yellow},
-            {"оранж", Color.Orange},
-            {"фиолетов", Color.Purple},
-            {"розов", Color.Pink},
-            {"черн", Color.Black},
-            {"бел", Color.White},
-            {"сер", Color.Gray},
-            {"коричнев", Color.Brown},
-            {"золот", Color.Gold},
-            {"серебр", Color.Silver},
-            {"бронз", Color.FromArgb(205, 127, 50)},
-            
-            // Английские названия
-            {"red", Color.Red},
-            {"blue", Color.Blue},
-            {"green", Color.Green},
-            {"yellow", Color.Yellow},
-            {"orange", Color.Orange},
-            {"purple", Color.Purple},
-            {"pink", Color.Pink},
-            {"black", Color.Black},
-            {"white", Color.White},
-            {"gray", Color.Gray},
-            {"grey", Color.Gray},
-            {"brown", Color.Brown},
-            {"gold", Color.Gold},
-            {"silver", Color.Silver},
-            {"bronze", Color.FromArgb(205, 127, 50)}
-        };
-
+        // Существующий метод (без цвета)
         public ShapeParameters Parse(string description)
         {
             var parameters = new ShapeParameters();
-            string originalText = description;
             description = description.ToLower().Trim();
 
             Console.WriteLine($"🔍 Парсинг: {description}");
 
-            // 1. Ищем цвет в описании
-            DetectColor(description, parameters);
-
-            // 2. Определяем тип фигуры
-            if (description.Contains("куб") ||
-                description.Contains("cube") ||
-                description.Contains("прямоугольник"))
+            // Определяем тип фигуры
+            if (description.Contains("куб") || description.Contains("cube") || description.Contains("прямоугольник"))
             {
                 parameters.ShapeType = "cube";
                 ExtractCubeDimensions(description, parameters);
             }
-            else if (description.Contains("сфер") ||
-                     description.Contains("sphere") ||
-                     description.Contains("шар") ||
-                     description.Contains("ball"))
+            else if (description.Contains("сфер") || description.Contains("sphere") ||
+                     description.Contains("шар") || description.Contains("ball"))
             {
                 parameters.ShapeType = "sphere";
                 ExtractSphereDimensions(description, parameters);
             }
-            else if (description.Contains("цилиндр") ||
-                     description.Contains("cylinder") ||
-                     description.Contains("труб") ||
-                     description.Contains("pipe"))
+            else if (description.Contains("цилиндр") || description.Contains("cylinder") ||
+                     description.Contains("труб") || description.Contains("pipe"))
             {
                 parameters.ShapeType = "cylinder";
                 ExtractCylinderDimensions(description, parameters);
             }
             else
             {
-                // Если не распознали - пытаемся угадать
                 var numbers = ExtractAllNumbers(description);
                 if (numbers.Count == 1)
                 {
@@ -107,26 +58,56 @@ namespace CadGenerator
                 }
             }
 
-            Console.WriteLine($"   🎨 Цвет: {parameters.ColorName}");
+            // Пробуем найти цвет в тексте
+            DetectColor(description, parameters);
+
+            return parameters;
+        }
+
+        // НОВЫЙ МЕТОД с поддержкой цвета из ComboBox
+        public ShapeParameters Parse(string description, Color selectedColor)
+        {
+            // Сначала парсим как обычно
+            var parameters = Parse(description);
+
+            // Если передан конкретный цвет, используем его (приоритет выше, чем цвет из текста)
+            if (selectedColor != Color.Empty)
+            {
+                parameters.Color = selectedColor;
+                parameters.ColorName = GetColorName(selectedColor);
+            }
+
             return parameters;
         }
 
         private void DetectColor(string text, ShapeParameters parameters)
         {
-            foreach (var colorPair in _colorMap)
+            var colorMap = new Dictionary<string, Color>
+            {
+                {"красн", Color.Red}, {"алый", Color.Red},
+                {"син", Color.Blue}, {"голуб", Color.LightBlue},
+                {"зелен", Color.Green}, {"салатов", Color.LightGreen},
+                {"желт", Color.Yellow}, {"оранж", Color.Orange},
+                {"фиолетов", Color.Purple}, {"розов", Color.Pink},
+                {"черн", Color.Black}, {"бел", Color.White},
+                {"сер", Color.Gray}, {"коричнев", Color.Brown},
+                {"золот", Color.Gold}, {"серебр", Color.Silver},
+                {"red", Color.Red}, {"blue", Color.Blue}, {"green", Color.Green},
+                {"yellow", Color.Yellow}, {"orange", Color.Orange}, {"purple", Color.Purple},
+                {"pink", Color.Pink}, {"black", Color.Black}, {"white", Color.White},
+                {"gray", Color.Gray}, {"grey", Color.Gray}, {"brown", Color.Brown}
+            };
+
+            foreach (var colorPair in colorMap)
             {
                 if (text.Contains(colorPair.Key))
                 {
                     parameters.Color = colorPair.Value;
                     parameters.ColorName = GetColorName(colorPair.Value);
-
-                    // Удаляем цвет из текста, чтобы он не мешал парсингу размеров
-                    text = text.Replace(colorPair.Key, "");
                     return;
                 }
             }
 
-            // Если цвет не найден, оставляем серый по умолчанию
             parameters.Color = Color.Gray;
             parameters.ColorName = "серый";
         }
@@ -148,6 +129,9 @@ namespace CadGenerator
             if (color == Color.Silver) return "серебряный";
             return "неизвестный";
         }
+
+        // ... остальные методы (ExtractCubeDimensions, ExtractSphereDimensions, 
+        // ExtractCylinderDimensions, ExtractAllNumbers) остаются без изменений ...
 
         private void ExtractCubeDimensions(string text, ShapeParameters parameters)
         {
@@ -198,7 +182,6 @@ namespace CadGenerator
                     text.Contains("diameter") || text.Contains("ø"))
                 {
                     parameters.Size1 = numbers[0] / 2;
-                    Console.WriteLine($"   📏 Диаметр {numbers[0]} -> радиус {parameters.Size1}");
                 }
             }
             else
@@ -219,7 +202,6 @@ namespace CadGenerator
                 if (text.Contains("диаметр") || text.Contains("diameter") || text.Contains("ø"))
                 {
                     parameters.Size1 = numbers[0] / 2;
-                    Console.WriteLine($"   📏 Диаметр {numbers[0]} -> радиус {parameters.Size1}");
                 }
 
                 if ((text.Contains("высот") && numbers[0] > numbers[1]) ||
@@ -228,14 +210,12 @@ namespace CadGenerator
                     double temp = parameters.Size1;
                     parameters.Size1 = parameters.Size2;
                     parameters.Size2 = temp;
-                    Console.WriteLine($"   🔄 Перестановка: радиус={parameters.Size1}, высота={parameters.Size2}");
                 }
             }
             else if (numbers.Count == 1)
             {
                 parameters.Size1 = numbers[0] / 2;
                 parameters.Size2 = numbers[0];
-                Console.WriteLine($"   📏 Только одно число: радиус={parameters.Size1}, высота={parameters.Size2}");
             }
             else
             {

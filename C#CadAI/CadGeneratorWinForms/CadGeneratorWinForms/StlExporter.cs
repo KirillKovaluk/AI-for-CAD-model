@@ -1,9 +1,16 @@
 ﻿using g3;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 
 namespace CadGeneratorWinForms
 {
     public class StlExporter
     {
+        private ObjExporter _objExporter = new ObjExporter();
+
+        // STL экспорт (без цвета)
         public void ExportToStl(DMesh3 mesh, string filePath)
         {
             try
@@ -14,10 +21,6 @@ namespace CadGeneratorWinForms
                     Directory.CreateDirectory(directory);
                 }
 
-                // Для STL файлов цвет не сохраняется (формат не поддерживает цвет)
-                // Но мы можем сохранить информацию о цвете в отдельном файле
-                SaveColorInfo(mesh, filePath + ".color.txt");
-
                 var writer = new StandardMeshWriter();
                 var meshes = new List<WriteMesh> { new WriteMesh(mesh) };
 
@@ -25,7 +28,7 @@ namespace CadGeneratorWinForms
 
                 if (result.code == IOCode.Ok)
                 {
-                    Console.WriteLine($"✅ Модель сохранена: {filePath}");
+                    Console.WriteLine($"✅ STL модель сохранена: {filePath}");
                 }
                 else
                 {
@@ -39,31 +42,29 @@ namespace CadGeneratorWinForms
             }
         }
 
-        private void SaveColorInfo(DMesh3 mesh, string colorFilePath)
+        // OBJ экспорт с цветом
+        public void ExportToObj(DMesh3 mesh, Color color, string filePath)
         {
-            try
-            {
-                if (mesh.HasVertexColors)
-                {
-                    using (StreamWriter writer = new StreamWriter(colorFilePath))
-                    {
-                        writer.WriteLine("# Информация о цветах модели");
-                        writer.WriteLine($"# Вершин с цветом: {mesh.VertexCount}");
+            _objExporter.ExportToOBJ(mesh, color, filePath);
+        }
 
-                        // Берем цвет первой вершины как основной
-                        if (mesh.VertexCount > 0)
-                        {
-                            var color = mesh.GetVertexColor(0);
-                            writer.WriteLine($"R: {color.x * 255:F0}");
-                            writer.WriteLine($"G: {color.y * 255:F0}");
-                            writer.WriteLine($"B: {color.z * 255:F0}");
-                        }
-                    }
-                }
-            }
-            catch
+        // Автоматический выбор формата по расширению
+        public void Export(DMesh3 mesh, Color color, string filePath)
+        {
+            string extension = Path.GetExtension(filePath).ToLower();
+
+            if (extension == ".obj")
             {
-                // Игнорируем ошибки сохранения цвета
+                ExportToObj(mesh, color, filePath);
+            }
+            else if (extension == ".stl")
+            {
+                ExportToStl(mesh, filePath);
+            }
+            else
+            {
+                // По умолчанию OBJ с цветом
+                ExportToObj(mesh, color, filePath + ".obj");
             }
         }
     }
