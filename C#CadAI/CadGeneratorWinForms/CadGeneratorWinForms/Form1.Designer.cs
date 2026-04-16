@@ -79,16 +79,21 @@
             this.lblColor.Text = "Цвет:";
             this.lblColor.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 
-            // cmbColor
+            // cmbColor - ТОЛЬКО 8 РАБОТАЮЩИХ ЦВЕТОВ
             this.cmbColor.Location = new System.Drawing.Point(70, 90);
             this.cmbColor.Size = new System.Drawing.Size(150, 25);
             this.cmbColor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbColor.Items.AddRange(new object[] {
-                "Красный", "Синий", "Зеленый", "Желтый", "Оранжевый",
-                "Фиолетовый", "Розовый", "Черный", "Белый", "Серый",
-                "Коричневый", "Золотой", "Серебряный"
+                "Красный",
+                "Синий",
+                "Зеленый",
+                "Желтый",
+                "Голубой",
+                "Белый",
+                "Черный",
+                "Серый"
             });
-            this.cmbColor.SelectedIndex = 9;
+            this.cmbColor.SelectedIndex = 7; // Серый по умолчанию
             this.cmbColor.TabIndex = 1;
 
             // groupBoxModels
