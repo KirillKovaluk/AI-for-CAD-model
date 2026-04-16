@@ -13,6 +13,7 @@ namespace CadGeneratorWinForms
         public double Size3 { get; set; }
         public Color Color { get; set; } = Color.Gray;
         public string ColorName { get; set; } = "серый";
+        public List<Color> Colors { get; set; } // Для разноцветных объектов
     }
 
     public class TextParser
@@ -25,7 +26,62 @@ namespace CadGeneratorWinForms
 
             Console.WriteLine($"🔍 Парсинг: {description}");
 
-            // 1. Определяем тип фигуры (с расширенными ключевыми словами)
+            // ============ СЛОЖНЫЕ ОБЪЕКТЫ (приоритет выше) ============
+
+            // Кубик Рубика
+            if (description.Contains("кубик рубик") || description.Contains("rubik") ||
+                description.Contains("куб рубик") || description.Contains("рубик"))
+            {
+                parameters.ShapeType = "rubik_cube";
+                parameters.Size1 = 3; // 3x3
+                Console.WriteLine($"   📌 Распознано: КУБИК РУБИКА");
+                return parameters;
+            }
+
+            // Пирамидка Рубика
+            if ((description.Contains("пирамид") && description.Contains("рубик")) ||
+                description.Contains("пирамидка") || description.Contains("pyramid"))
+            {
+                parameters.ShapeType = "rubik_pyramid";
+                Console.WriteLine($"   📌 Распознано: ПИРАМИДКА РУБИКА");
+                return parameters;
+            }
+
+            // Домик
+            if (description.Contains("домик") || description.Contains("house") || description.Contains("дом"))
+            {
+                parameters.ShapeType = "house";
+                Console.WriteLine($"   📌 Распознано: ДОМИК");
+                return parameters;
+            }
+
+            // Звезда
+            if (description.Contains("звезд") || description.Contains("star"))
+            {
+                parameters.ShapeType = "star";
+                Console.WriteLine($"   📌 Распознано: ЗВЕЗДА");
+                return parameters;
+            }
+
+            // Лестница
+            if (description.Contains("лестниц") || description.Contains("stairs") || description.Contains("ступен"))
+            {
+                parameters.ShapeType = "stairs";
+                Console.WriteLine($"   📌 Распознано: ЛЕСТНИЦА");
+                return parameters;
+            }
+
+            // Колонна
+            if (description.Contains("колонн") || description.Contains("column") || description.Contains("столб"))
+            {
+                parameters.ShapeType = "column";
+                Console.WriteLine($"   📌 Распознано: КОЛОННА");
+                return parameters;
+            }
+
+            // ============ ПРОСТЫЕ ФИГУРЫ ============
+
+            // Определяем тип фигуры
             if (description.Contains("куб") || description.Contains("cube") ||
                 description.Contains("прямоугольник") || description.Contains("box"))
             {
@@ -57,14 +113,14 @@ namespace CadGeneratorWinForms
                 {
                     parameters.ShapeType = "sphere";
                     parameters.Size1 = numbers[0];
-                    Console.WriteLine($"   📌 Автоопределение: СФЕРА (1 число)");
+                    Console.WriteLine($"   📌 Автоопределение: СФЕРА");
                 }
                 else if (numbers.Count == 2)
                 {
                     parameters.ShapeType = "cylinder";
                     parameters.Size1 = numbers[0];
                     parameters.Size2 = numbers[1];
-                    Console.WriteLine($"   📌 Автоопределение: ЦИЛИНДР (2 числа)");
+                    Console.WriteLine($"   📌 Автоопределение: ЦИЛИНДР");
                 }
                 else
                 {
@@ -72,7 +128,7 @@ namespace CadGeneratorWinForms
                     parameters.Size1 = 10;
                     parameters.Size2 = 10;
                     parameters.Size3 = 10;
-                    Console.WriteLine($"   📌 Автоопределение: КУБ (по умолчанию)");
+                    Console.WriteLine($"   📌 Автоопределение: КУБ");
                 }
             }
 
@@ -97,7 +153,6 @@ namespace CadGeneratorWinForms
         {
             var numbers = ExtractAllNumbers(text);
 
-            // Ищем формат XxYxZ
             var match = Regex.Match(text, @"(\d+(?:\.\d+)?)\s*[xх]\s*(\d+(?:\.\d+)?)\s*[xх]\s*(\d+(?:\.\d+)?)");
             if (match.Success)
             {
@@ -139,7 +194,6 @@ namespace CadGeneratorWinForms
             {
                 parameters.Size1 = numbers[0];
 
-                // Если указан диаметр, делим на 2
                 if (text.Contains("диаметр") || text.Contains("диаметром") ||
                     text.Contains("diameter") || text.Contains("ø"))
                 {
@@ -162,11 +216,9 @@ namespace CadGeneratorWinForms
 
             if (numbers.Count >= 2)
             {
-                // Первое число - радиус, второе - высота
                 parameters.Size1 = numbers[0];
                 parameters.Size2 = numbers[1];
 
-                // Если указан диаметр, корректируем
                 if (text.Contains("диаметр") || text.Contains("диаметром") ||
                     text.Contains("diameter") || text.Contains("ø"))
                 {
@@ -174,7 +226,6 @@ namespace CadGeneratorWinForms
                     Console.WriteLine($"   📏 Диаметр {numbers[0]} -> радиус {parameters.Size1}");
                 }
 
-                // Если порядок перепутан (высота указана первой)
                 if ((text.Contains("высот") && numbers[0] > numbers[1]) ||
                     (text.IndexOf("высот") < text.IndexOf("радиус") && numbers[0] > numbers[1]))
                 {
@@ -186,10 +237,8 @@ namespace CadGeneratorWinForms
             }
             else if (numbers.Count == 1)
             {
-                // Если одно число - считаем что это радиус, высота = радиус * 2
                 parameters.Size1 = numbers[0];
                 parameters.Size2 = numbers[0] * 2;
-                Console.WriteLine($"   📏 Одно число: радиус={parameters.Size1}, высота={parameters.Size2}");
             }
             else
             {
@@ -202,51 +251,47 @@ namespace CadGeneratorWinForms
 
         private void DetectColor(string text, ShapeParameters parameters)
         {
-            var colorMap = new Dictionary<string, Color>
-            {
-                {"красн", Color.Red}, {"алый", Color.Red},
-                {"син", Color.Blue}, {"голуб", Color.LightBlue},
-                {"зелен", Color.Green}, {"салатов", Color.LightGreen},
-                {"желт", Color.Yellow}, {"оранж", Color.Orange},
-                {"фиолетов", Color.Purple}, {"розов", Color.Pink},
-                {"черн", Color.Black}, {"бел", Color.White},
-                {"сер", Color.Gray}, {"коричнев", Color.Brown},
-                {"золот", Color.Gold}, {"серебр", Color.Silver},
-                {"red", Color.Red}, {"blue", Color.Blue}, {"green", Color.Green},
-                {"yellow", Color.Yellow}, {"orange", Color.Orange}, {"purple", Color.Purple},
-                {"pink", Color.Pink}, {"black", Color.Black}, {"white", Color.White},
-                {"gray", Color.Gray}, {"grey", Color.Gray}, {"brown", Color.Brown}
-            };
+            text = text.ToLower();
 
-            foreach (var colorPair in colorMap)
-            {
-                if (text.Contains(colorPair.Key))
-                {
-                    parameters.Color = colorPair.Value;
-                    parameters.ColorName = GetColorName(colorPair.Value);
-                    return;
-                }
-            }
+            // Основные цвета
+            if (text.Contains("красн") || text.Contains("red"))
+            { parameters.Color = Color.FromArgb(255, 255, 0, 0); parameters.ColorName = "красный"; return; }
 
-            parameters.Color = Color.Gray;
+            if (text.Contains("син") && !text.Contains("голуб"))
+            { parameters.Color = Color.FromArgb(255, 0, 0, 255); parameters.ColorName = "синий"; return; }
+
+            if (text.Contains("зелен") || text.Contains("green"))
+            { parameters.Color = Color.FromArgb(255, 0, 255, 0); parameters.ColorName = "зеленый"; return; }
+
+            if (text.Contains("желт") || text.Contains("yellow"))
+            { parameters.Color = Color.FromArgb(255, 255, 255, 0); parameters.ColorName = "желтый"; return; }
+
+            if (text.Contains("голуб") || text.Contains("cyan"))
+            { parameters.Color = Color.FromArgb(255, 0, 255, 255); parameters.ColorName = "голубой"; return; }
+
+            if (text.Contains("бел") && !text.Contains("голуб"))
+            { parameters.Color = Color.FromArgb(255, 255, 255, 255); parameters.ColorName = "белый"; return; }
+
+            if (text.Contains("черн") || text.Contains("black"))
+            { parameters.Color = Color.FromArgb(255, 0, 0, 0); parameters.ColorName = "черный"; return; }
+
+            if (text.Contains("сер") || text.Contains("gray") || text.Contains("grey"))
+            { parameters.Color = Color.FromArgb(255, 128, 128, 128); parameters.ColorName = "серый"; return; }
+
+            parameters.Color = Color.FromArgb(255, 128, 128, 128);
             parameters.ColorName = "серый";
         }
 
         private string GetColorName(Color color)
         {
-            if (color == Color.Red) return "красный";
-            if (color == Color.Blue) return "синий";
-            if (color == Color.Green) return "зеленый";
-            if (color == Color.Yellow) return "желтый";
-            if (color == Color.Orange) return "оранжевый";
-            if (color == Color.Purple) return "фиолетовый";
-            if (color == Color.Pink) return "розовый";
-            if (color == Color.Black) return "черный";
-            if (color == Color.White) return "белый";
-            if (color == Color.Gray) return "серый";
-            if (color == Color.Brown) return "коричневый";
-            if (color == Color.Gold) return "золотой";
-            if (color == Color.Silver) return "серебряный";
+            if (color.R == 255 && color.G == 0 && color.B == 0) return "красный";
+            if (color.R == 0 && color.G == 0 && color.B == 255) return "синий";
+            if (color.R == 0 && color.G == 255 && color.B == 0) return "зеленый";
+            if (color.R == 255 && color.G == 255 && color.B == 0) return "желтый";
+            if (color.R == 0 && color.G == 255 && color.B == 255) return "голубой";
+            if (color.R == 255 && color.G == 255 && color.B == 255) return "белый";
+            if (color.R == 0 && color.G == 0 && color.B == 0) return "черный";
+            if (color.R == 128 && color.G == 128 && color.B == 128) return "серый";
             return "неизвестный";
         }
 
@@ -263,7 +308,6 @@ namespace CadGeneratorWinForms
                     numbers.Add(result);
                 }
             }
-
             return numbers;
         }
     }

@@ -70,7 +70,7 @@
             // lblExamples
             this.lblExamples.Location = new System.Drawing.Point(6, 55);
             this.lblExamples.Size = new System.Drawing.Size(440, 30);
-            this.lblExamples.Text = "Примеры: куб 15x20x25 | сфера радиусом 30 | цилиндр 5 20 | шар диаметром 40";
+            this.lblExamples.Text = "Примеры: куб 15x20x25 | сфера 30 | цилиндр 5 20 | домик "; // | звезда | лестница | колонна | кубик рубика";
             this.lblExamples.ForeColor = System.Drawing.Color.Gray;
 
             // lblColor
