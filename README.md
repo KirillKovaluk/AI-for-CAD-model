@@ -5,7 +5,7 @@
 ## Запуск программы:
 
 1. Склонируйте репазиторий к себе на компьтор.
-- git clone https://github.com/ваш-репозиторий/AI-for-CAD-model.git
+- git clone [https://github.com/ваш-репозиторий/AI-for-CAD-model.git](https://github.com/KirillKovaluk/AI-for-CAD-model/edit/main/README.md)
 
 2. Перейдите в папку с программой
 -  AI-for-CAD-model
