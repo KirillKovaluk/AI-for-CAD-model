@@ -1,6 +1,7 @@
 # AI-for-CAD-model
 
 # Видео-инсрукция по использыванию программы
+- https://drive.google.com/file/d/1Da5eEvyFynoLwoNu1AYuxXsO91NhocsT/view?usp=sharing
 
 ## Запуск программы:
 
